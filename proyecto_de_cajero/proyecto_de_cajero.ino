@@ -1,6 +1,6 @@
 #include <Keypad.h>
 #include <LiquidCrystal_I2C.h>
-#define buzzer 8
+
 
 LiquidCrystal_I2C lcd(0x27,16,2);
 
@@ -23,6 +23,19 @@ float valor=0;
 float monto=0;   
 
 
+int TRIG = 10;
+int ECO = 9;
+int LED = 3;
+int DURACION;
+int DISTANCIA;
+
+//Monedas
+int num_10;
+int num_50;
+int num_100;
+int monto;
+int DuracionEntreMonedas = 1000;
+
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
@@ -33,11 +46,40 @@ void setup() {
   delay(2000);
   lcd.clear();
   lcd.setCursor(0,0);
+
+  pinMode(TRIG, OUTPUT);
+  pinMode(ECO, INPUT);
+  pinMode(LED, OUTPUT);
 }
 
 void loop() {
+
+  //ENTRAN LAS MONEDAS
+  digitalWrite(TRIG, HIGH); 
+  delay(1);	
+  digitalWrite(TRIG, LOW);	
+  
+  DURACION = pulseIn(ECO, HIGH);
+  
+  DISTANCIA = DURACION / 58.2;
+  Serial.println(DISTANCIA);
+  if(0<DISTANCIA && DISTANCIA<60){
+    num_100++;
+    delay(DuracionEntreMonedas);
+  }else if(60<DISTANCIA && DISTANCIA<120){
+    num_50++;
+    delay(DuracionEntreMonedas);
+  }else if(120<DISTANCIA && DISTANCIA<180){
+    num_10++;
+    delay(DuracionEntreMonedas);
+  }
+  delay(200);
+
+
+  //RECIBE VUELTO
   // put your main code here, to run repeatedly:
-  while(TECLA=teclado.getKey()){
+  TECLA=teclado.getKey()
+  while(TECLADO!=""){
     cadena+=TECLA;
     Serial.println(TECLA);
     lcd.print(TECLA);
@@ -47,8 +89,12 @@ void loop() {
       Serial.println("LLEGO HASTA A");
       break;
     }
+    TECLADO="";
   }
   lcd.setCursor(0,0);
   lcd.print(cadena);
-  
+
+
+
+
 }
