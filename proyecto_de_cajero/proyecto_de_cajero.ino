@@ -25,7 +25,6 @@ float monto=0;
 
 int TRIG = 10;
 int ECO = 9;
-int LED = 3;
 int DURACION;
 int DISTANCIA;
 
@@ -35,6 +34,9 @@ int num_50;
 int num_100;
 int monto;
 int DuracionEntreMonedas = 1000;
+int recibe_10;
+int recibe_50;
+int recibe_100;
 
 void setup() {
   // put your setup code here, to run once:
@@ -76,25 +78,51 @@ void loop() {
   delay(200);
 
 
-  //RECIBE VUELTO
+  //Cobra
   // put your main code here, to run repeatedly:
-  TECLA=teclado.getKey()
-  while(TECLADO!=""){
-    cadena+=TECLA;
-    Serial.println(TECLA);
-    lcd.print(TECLA);
-    if(TECLA=='A'){
-      lcd.clear();
-      cadena="";
-      Serial.println("LLEGO HASTA A");
-      break;
+  while(true){
+    TECLA=teclado.getKey();
+    if (TECLA!=""){
+      cadena+=TECLA;
+      Serial.println(TECLA);
+      lcd.print(TECLA);
+      if(TECLA=='A'){
+        lcd.clear();
+        delay(100);
+        cadena="";
+        Serial.println("LLEGO HASTA A");
+        break;
+      }
+      TECLA="";
+    };
+    if (TECLA==D){
+      //funcion para calcular el numero de monedas
+      func_monedas(cadena);
+      delay(50);
+      cadena = "";
+      Serial.println(recibe_100);
+      Serial.println(recibe_50);
+      Serial.println(recibe_10);
     }
-    TECLADO="";
   }
   lcd.setCursor(0,0);
   lcd.print(cadena);
+};
 
-
-
-
+void func_monedas(String cadena){
+  int intCadena = toInt(cadena);
+  int parteEntera = cadena;
+  //parte decimal ->partD
+  float partD = cadena - parteEntera;
+  recibe_100 = intCadena;
+  if (partD<100){
+    if(partD>50){
+      recibe_50 = 1;
+      
+    } else{
+      recibe_10 = partD / 10; 
+    }
+  }else{
+    Serial.println("Parte decimal fuera de rango");
+  }
 }
