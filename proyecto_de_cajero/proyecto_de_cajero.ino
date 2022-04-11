@@ -1,5 +1,6 @@
 #include <Keypad.h>
 #include <LiquidCrystal_I2C.h>
+#include <Servo.h>
 
 
 LiquidCrystal_I2C lcd(0x27,16,2);
@@ -38,6 +39,20 @@ int recibe_10;
 int recibe_50;
 int recibe_100;
 
+
+
+Servo servo1; //100
+Servo servo2; //50
+Servo servo3; //10
+
+int PINSERVO = 2;
+int PULSOMIN = 1000;
+int PULSOMAX = 2000;
+
+int a = 180;
+int b = 180;
+int c = 180;
+
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
@@ -51,7 +66,10 @@ void setup() {
 
   pinMode(TRIG, OUTPUT);
   pinMode(ECO, INPUT);
-  pinMode(LED, OUTPUT);
+  
+  servo1.attach(PINSERVO, PULSOMIN, PULSOMAX);
+  servo2.attach(PINSERVO, PULSOMIN, PULSOMAX);
+  servo3.attach(PINSERVO, PULSOMIN, PULSOMAX);
 }
 
 void loop() {
@@ -101,8 +119,44 @@ void loop() {
       delay(50);
       cadena = "";
       Serial.println(recibe_100);
+      for (int i = 0; i < recibe_100; i++)
+      {
+        if(a==180){
+          servo1.write(0);
+          delay(2000);
+          a=0;
+        }else{
+          servo1.write(180);
+          delay(2000);
+          a=180;
+        }
+      }
       Serial.println(recibe_50);
+      for (int i = 0; i < recibe_50; i++)
+      {
+        if(b==180){
+          servo1.write(0);
+          delay(2000);
+          b=0;
+        }else{
+          servo1.write(180);
+          delay(2000);
+          b=180;
+        }
+      }
       Serial.println(recibe_10);
+      for (int i = 0; i < recibe_10; i++)
+      {
+        if(c==180){
+          servo2.write(0);
+          delay(2000);
+          c=0;
+        }else{
+          servo2.write(180);
+          delay(2000);
+          c=180;
+        }
+      }
     }
   }
   lcd.setCursor(0,0);
@@ -126,3 +180,5 @@ void func_monedas(String cadena){
     Serial.println("Parte decimal fuera de rango");
   }
 }
+
+
