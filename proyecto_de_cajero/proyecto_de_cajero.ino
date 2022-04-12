@@ -116,8 +116,7 @@ void loop() {
           cadena = "";
           Serial.println("Imprime un sol");
           Serial.println(recibe_100);
-          for (int i = 0; i < recibe_100; i++)
-          {
+          for (int i = 0; i < recibe_100; i++){
             if(a==180){
               servo1.write(0);
               delay(2000);
@@ -130,8 +129,7 @@ void loop() {
           }
           Serial.println("Imprime cincuenta");
           Serial.println(recibe_50);
-          for (int i = 0; i < recibe_50; i++)
-          {
+          for (int i = 0; i < recibe_50; i++){
             if(b==180){
               servo2.write(0);
               delay(2000);
@@ -144,8 +142,7 @@ void loop() {
           }
           Serial.println("Imprime diecentimom");
           Serial.println(recibe_10);
-          for (int i = 0; i < recibe_10; i++)
-          {
+          for (int i = 0; i < recibe_10; i++){
             if(c==180){
               servo3.write(0);
               delay(2000);
@@ -175,7 +172,7 @@ void func_monedas(String cadena){
   float partD = intCadena - parteEntera;
   recibe_100 = parteEntera;
   if (partD>0 && partD<1){
-    if(partD>0.5){
+    if(partD>=0.45){
       recibe_50 = 1;
       Serial.println(partD);
       if(partD>=0.85){
@@ -194,7 +191,19 @@ void func_monedas(String cadena){
         Serial.println("sin valor");
       }
     } else{
-      recibe_10 = partD * 10; 
+      recibe_50 = 0;
+      Serial.println(partD);
+      if(partD>=0.35){
+        recibe_10 = 4;
+      } else if(partD>=0.25){
+        recibe_10 = 3;
+      } else if(partD>=0.15){
+        recibe_10 = 2;
+      } else if(partD>=0.05){
+        recibe_10 = 1;
+      } else {
+        recibe_10 = 0;
+      }
     }
   }else{
     Serial.println("Parte decimal fuera de rango");
