@@ -21,7 +21,7 @@ Keypad teclado = Keypad(makeKeymap(keys), pinesFilas, pinesColumnas, FILAS, COLU
 char TECLA;       // almacena la tecla presionada
 String cadena="";
 float valor=0;
-float monto=0;   
+float monto=0;  
 
 
 int TRIG = A1;
@@ -86,12 +86,15 @@ void loop() {
   if(DISTANCIA<380){
     if(0<DISTANCIA && DISTANCIA<100){
       num_100++;
+      monto+=1;
       delay(DuracionEntreMonedas);
     }else if(100<=DISTANCIA && DISTANCIA<200){
       num_50++;
+      monto+=0.5;
       delay(DuracionEntreMonedas);
     }else if(200<=DISTANCIA && DISTANCIA<=300){
       num_10++;
+      monto+=0.1;
       delay(DuracionEntreMonedas);
     }else{
       lcd.setCursor(0,1);
@@ -100,7 +103,6 @@ void loop() {
           cadena+=TECLA;
           Serial.println(TECLA);
         }
-        
         lcd.print(cadena);
         if(TECLA=='A'){
           lcd.clear();
@@ -110,8 +112,9 @@ void loop() {
         }
         if (TECLA=='D'){
           //funcion para calcular el numero de monedas
-          Serial.println("Se ha presionado D");
+          Serial.print("Se ha presionado D");
           func_monedas(cadena);
+          monto-=cadena.toFloat();
           delay(50);
           cadena = "";
           Serial.println("Imprime un sol");
@@ -158,12 +161,7 @@ void loop() {
     }
   }
   lcd.setCursor(0,0);
-  monto=monto_Pantalla(num_100,num_50,num_10);
   lcd.print(monto);
-}
-float monto_Pantalla(int unsol,int cincuenta,int diez){
-  float monto=unsol*1.0+(cincuenta*1.0)/2.0+(diez*1.0)/10.0;
-  return monto;
 }
 void func_monedas(String cadena){
   float intCadena = cadena.toFloat();
@@ -174,21 +172,14 @@ void func_monedas(String cadena){
   if (partD>0 && partD<1){
     if(partD>=0.45){
       recibe_50 = 1;
-      Serial.println(partD);
-      if(partD>=0.85){
-        Serial.println("valor de 1");
+      if(partD>=0.9){
         recibe_10 = 4;
-      }else if (partD>=0.75){
-        Serial.println("valor de 2");
+      }else if (partD>=0.8){
         recibe_10 = 3;
-      }else if (partD>=0.65){
-        Serial.println("valor de 3");
+      }else if (partD>=0.7){
         recibe_10 = 2;
-      }else if (partD>=0.55){
-        Serial.println("valor de 4");
+      }else if (partD>=0.6){
         recibe_10 = 1;
-      }else{
-        Serial.println("sin valor");
       }
     } else{
       recibe_50 = 0;
